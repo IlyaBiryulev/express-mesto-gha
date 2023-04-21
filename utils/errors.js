@@ -5,6 +5,7 @@ const INTERNAL_SERVER_ERROR = 500;
 const {
   ValidationError,
   DocumentNotFoundError,
+  CastError,
 } = require('mongoose').Error;
 
 module.exports.errors = (err, res) => {
@@ -17,6 +18,11 @@ module.exports.errors = (err, res) => {
   if (err.name instanceof DocumentNotFoundError) {
     return res.status(NOT_FOUND).send({
       message: 'Пользователь с таким ID не найден',
+    });
+  }
+  if (err instanceof CastError) {
+    return res.status(BAD_REQUEST).send({
+      message: `Некорректный ID: ${err.value}`,
     });
   }
   return res.status(INTERNAL_SERVER_ERROR).send({

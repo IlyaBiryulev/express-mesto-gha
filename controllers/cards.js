@@ -20,12 +20,14 @@ module.exports.getAllCards = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndDelete(req.params.cardId)
+    .orFail()
     .then(() => res.send({ message: 'Карточка удалена' }))
     .catch((err) => errors(err, res));
 };
 
 const cardLikesUpdate = (req, res, upData) => {
   Card.findByIdAndUpdate(req.params.cardId, upData, { new: true })
+    .orFail()
     .then((card) => card.populate(['owner', 'likes']))
     .then((card) => res.send(card))
     .catch((err) => errors(err, res));
