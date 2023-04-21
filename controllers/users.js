@@ -12,7 +12,7 @@ module.exports.createUser = (req, res) => {
 
 module.exports.getAllUser = (req, res) => {
   User.find({})
-    .then((user) => res.send(user))
+    .then((users) => res.send(users))
     .catch((err) => errors(err, res));
 };
 
