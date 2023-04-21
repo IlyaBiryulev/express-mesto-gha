@@ -7,7 +7,7 @@ module.exports.createCard = (req, res) => {
   const ownerId = req.user._id;
   Card.create({ name, link, owner: ownerId })
     .then((card) => card.populate('owner'))
-    .then((card) => res.status(200).res.send(card))
+    .then((card) => res.status(200).send(card))
     .catch((err) => errors(err, res));
 };
 
@@ -29,7 +29,7 @@ const cardLikesUpdate = (req, res, upData) => {
   Card.findByIdAndUpdate(req.params.cardId, upData, { new: true })
     .orFail()
     .then((card) => card.populate(['owner', 'likes']))
-    .then((card) => res.send(card))
+    .then((card) => res.status(200).send(card))
     .catch((err) => errors(err, res));
 };
 
