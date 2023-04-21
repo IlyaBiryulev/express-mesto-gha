@@ -5,6 +5,7 @@ const { PORT = 3000 } = process.env;
 
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
+const notFoundRouter = require('./routes/notFound');
 
 const app = express();
 
@@ -22,5 +23,6 @@ app.use((req, res, next) => {
 
 app.use(cardRouter);
 app.use(userRouter);
+app.use(notFoundRouter);
 
 app.listen(PORT);
