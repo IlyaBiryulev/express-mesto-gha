@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "lint": "npx eslint ./",
-    "start": "PORT = 3000 node app.js",
-    "live": "nodemon app.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "repository": {
     "type": "git",
