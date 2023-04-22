@@ -26,6 +26,6 @@ module.exports.errors = (err, res) => {
     });
   }
   return res.status(INTERNAL_SERVER_ERROR).send({
-    message: `Произошла ошибка ${err.name}: ${err.message}`,
+    message: `На сервере произошла ошибка ${err.name}: ${err.message}`,
   });
 };
