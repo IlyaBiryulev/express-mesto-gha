@@ -34,8 +34,15 @@ module.exports.getAllUser = (req, res) => {
     .catch((err) => errors(err, res));
 };
 
-module.exports.getUser = (req, res) => {
+module.exports.getUserId = (req, res) => {
   User.findById(req.params.userId)
+    .orFail()
+    .then((user) => res.send(user))
+    .catch((err) => errors(err, res));
+};
+
+module.exports.getUserInfo = (req, res) => {
+  User.findById(req.user._id)
     .orFail()
     .then((user) => res.send(user))
     .catch((err) => errors(err, res));
