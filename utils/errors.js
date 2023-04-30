@@ -8,6 +8,8 @@ const {
   CastError,
 } = require('mongoose').Error;
 
+const AuthError = require('../errors/AuthError');
+
 module.exports.errors = (err, res) => {
   if (err instanceof ValidationError) {
     const errorMessage = Object.values(err.errors).map((error) => error.message).join(' ');
@@ -23,6 +25,11 @@ module.exports.errors = (err, res) => {
   if (err instanceof CastError) {
     return res.status(BAD_REQUEST).send({
       message: `Некорректный ID: ${err.value}`,
+    });
+  }
+  if (err instanceof AuthError) {
+    return res.status(err.statusCode).send({
+      message: err.message,
     });
   }
   return res.status(INTERNAL_SERVER_ERROR).send({

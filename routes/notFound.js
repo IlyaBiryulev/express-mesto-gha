@@ -1,7 +1,7 @@
-const notFoundRouter = require('express').Router();
+const router = require('express').Router();
 
 const { notFound } = require('../controllers/notFound');
 
-notFoundRouter.all('/404', notFound);
+router.all('/*', notFound);
 
-module.exports = notFoundRouter;
+module.exports = router;

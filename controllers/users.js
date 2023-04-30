@@ -32,17 +32,17 @@ module.exports.createUser = (req, res) => {
     .catch((err) => errors(err, res));
 };
 
-module.exports.getAllUser = (req, res, next) => {
+module.exports.getAllUser = (req, res) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch(next);
+    .catch((err) => errors(err, res));
 };
 
-module.exports.getUserId = (req, res, next) => {
+module.exports.getUserId = (req, res) => {
   User.findById(req.params.userId)
     .orFail()
     .then((user) => res.send(user))
-    .catch(next);
+    .catch((err) => errors(err, res));
 };
 
 module.exports.getUserInfo = (req, res, next) => {
@@ -70,7 +70,7 @@ module.exports.updateUserAvatar = (req, res) => {
   userUpdate(req, res, upData);
 };
 
-module.exports.login = (req, res, next) => {
+module.exports.login = (req, res) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
@@ -87,5 +87,9 @@ module.exports.login = (req, res, next) => {
       });
       res.send({ message: 'Успешный вход' });
     })
-    .catch(next);
+    .catch((err) => {
+      res
+        .status(401)
+        .send({ message: err.message });
+    });
 };
