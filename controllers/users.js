@@ -24,28 +24,32 @@ module.exports.createUser = (req, res) => {
       email,
       password: hash,
     }))
-    .then((user) => res.send(user))
+    .then((user) => {
+      const data = user.toObject();
+      delete data.password;
+      res.status(200).send(data);
+    })
     .catch((err) => errors(err, res));
 };
 
-module.exports.getAllUser = (req, res) => {
+module.exports.getAllUser = (req, res, next) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch((err) => errors(err, res));
+    .catch(next);
 };
 
-module.exports.getUserId = (req, res) => {
+module.exports.getUserId = (req, res, next) => {
   User.findById(req.params.userId)
     .orFail()
     .then((user) => res.send(user))
-    .catch((err) => errors(err, res));
+    .catch(next);
 };
 
-module.exports.getUserInfo = (req, res) => {
+module.exports.getUserInfo = (req, res, next) => {
   User.findById(req.user._id)
     .orFail()
     .then((user) => res.send(user))
-    .catch((err) => errors(err, res));
+    .catch(next);
 };
 
 const userUpdate = (req, res, upData) => {
@@ -76,9 +80,10 @@ module.exports.login = (req, res, next) => {
         NODE_ENV === 'production' ? SECRET_KEY : 'dev-secret-key',
         { expiresIn: '7d' },
       );
-      res.cookie(jwt, token, {
+      res.cookie('jwt', token, {
         maxAge: 3600000 * 24 * 7,
         httpOnly: true,
+        sameSite: true,
       });
       res.send({ message: 'Успешный вход' });
     })

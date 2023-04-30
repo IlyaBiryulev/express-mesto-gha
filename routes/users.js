@@ -8,7 +8,9 @@ const {
   getUserInfo,
 } = require('../controllers/users');
 
-userRouter.get('/users', getAllUser);
+const auth = require('../middlewares/auth');
+
+userRouter.get('/users', auth, getAllUser);
 
 userRouter.get('/users/:userId', getUserId);
 
