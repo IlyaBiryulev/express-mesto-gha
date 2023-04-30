@@ -6,6 +6,10 @@ const { PORT = 3000 } = process.env;
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
 const notFoundRouter = require('./routes/notFound');
+const {
+  login,
+  createUser,
+} = require('./controllers/users');
 
 const app = express();
 
@@ -24,5 +28,8 @@ app.use((req, res, next) => {
 app.use(cardRouter);
 app.use(userRouter);
 app.use(notFoundRouter);
+
+app.post('/signin', login);
+app.post('/signup', createUser);
 
 app.listen(PORT);
