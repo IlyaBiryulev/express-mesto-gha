@@ -1,5 +1,7 @@
 const Card = require('../models/card');
 
+const ForbiddenError = require('../errors/forbiddenErrors');
+
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   const ownerId = req.user._id;
@@ -17,9 +19,19 @@ module.exports.getAllCards = (req, res, next) => {
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  Card.findByIdAndDelete(req.params.cardId)
+  Card.findById(req.params.cardId)
     .orFail()
-    .then(() => res.send({ message: 'Карточка удалена' }))
+    .then((card) => {
+      Card.deleteOne({ _id: card._id, owner: req.user._id })
+        .then((result) => {
+          if (result.deletedCount === 0) {
+            throw new ForbiddenError('Вы не можете удалить карточку другого пользователя');
+          } else {
+            res.send({ message: 'Карточка удалена' });
+          }
+        })
+        .catch(next);
+    })
     .catch(next);
 };
 
