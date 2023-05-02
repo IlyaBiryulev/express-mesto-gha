@@ -58,14 +58,14 @@ const userUpdate = (req, res, upData, next) => {
     .catch(next);
 };
 
-module.exports.updateUserProfile = (req, res) => {
+module.exports.updateUserProfile = (req, res, next) => {
   const upData = req.body;
-  userUpdate(req, res, upData);
+  userUpdate(req, res, upData, next);
 };
 
-module.exports.updateUserAvatar = (req, res) => {
+module.exports.updateUserAvatar = (req, res, next) => {
   const upData = req.body;
-  userUpdate(req, res, upData);
+  userUpdate(req, res, upData, next);
 };
 
 module.exports.login = (req, res, next) => {
