@@ -36,15 +36,16 @@ module.exports.getAllUser = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.getUserId = (req, res, next) => {
+/* module.exports.getUserId = (req, res, next) => {
   User.findById(req.params.userId)
     .orFail()
     .then((user) => res.send(user))
     .catch(next);
-};
+}; */
 
-module.exports.getUserInfo = (req, res, next) => {
-  User.findById(req.user._id)
+module.exports.getUser = (req, res, next) => {
+  const userId = req.params.userId ? req.params.userId : req.user._id;
+  User.findById(userId)
     .orFail()
     .then((user) => res.send(user))
     .catch(next);

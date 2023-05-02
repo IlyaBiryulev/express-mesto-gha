@@ -1,4 +1,4 @@
-const rootRouter = require('express').Router();
+const router = require('express').Router();
 
 const { celebrate, Joi } = require('celebrate');
 const userRoute = require('./users');
@@ -10,7 +10,7 @@ const LINK = require('../utils/constants');
 const auth = require('../middlewares/auth');
 const { login, createUser } = require('../controllers/users');
 
-rootRouter.post('/signin', celebrate({
+router.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
@@ -19,7 +19,7 @@ rootRouter.post('/signin', celebrate({
     avatar: Joi.string().regex(LINK),
   }),
 }), login);
-rootRouter.post('/signup', celebrate({
+router.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
@@ -29,8 +29,8 @@ rootRouter.post('/signup', celebrate({
   }),
 }), createUser);
 
-rootRouter.use('/users', auth, userRoute);
-rootRouter.use('/cards', auth, cardRouter);
-rootRouter.use('*', notFoundRouter);
+router.use('/users', auth, userRoute);
+router.use('/cards', auth, cardRouter);
+router.use('*', notFoundRouter);
 
-module.exports = rootRouter;
+module.exports = router;

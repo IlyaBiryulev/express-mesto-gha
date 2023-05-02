@@ -5,21 +5,20 @@ const LINK = require('../utils/constants');
 
 const {
   getAllUser,
-  getUserId,
   updateUserProfile,
   updateUserAvatar,
-  getUserInfo,
+  getUser,
 } = require('../controllers/users');
 
 router.get('/', getAllUser);
+
+router.get('/me', getUser);
 
 router.get('/:userId', celebrate({
   params: Joi.object().keys({
     userId: Joi.string().required().hex().length(24),
   }),
-}), getUserId);
-
-router.get('/me', getUserInfo);
+}), getUser);
 
 router.patch('/me', celebrate({
   body: Joi.object().keys({
