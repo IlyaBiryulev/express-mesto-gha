@@ -5,9 +5,7 @@ const { NODE_ENV, SECRET_KEY } = process.env;
 
 const User = require('../models/user');
 
-const { errors } = require('../utils/errors');
-
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const {
     name,
     about,
@@ -29,20 +27,20 @@ module.exports.createUser = (req, res) => {
       delete data.password;
       res.status(200).send(data);
     })
-    .catch((err) => errors(err, res));
+    .catch(next);
 };
 
-module.exports.getAllUser = (req, res) => {
+module.exports.getAllUser = (req, res, next) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch((err) => errors(err, res));
+    .catch(next);
 };
 
-module.exports.getUserId = (req, res) => {
+module.exports.getUserId = (req, res, next) => {
   User.findById(req.params.userId)
     .orFail()
     .then((user) => res.send(user))
-    .catch((err) => errors(err, res));
+    .catch(next);
 };
 
 module.exports.getUserInfo = (req, res, next) => {
@@ -52,12 +50,12 @@ module.exports.getUserInfo = (req, res, next) => {
     .catch(next);
 };
 
-const userUpdate = (req, res, upData) => {
+const userUpdate = (req, res, upData, next) => {
   const userId = req.user._id;
   User.findByIdAndUpdate(userId, upData, { new: true, runValidators: true })
     .orFail()
     .then((user) => res.send(user))
-    .catch((err) => errors(err, res));
+    .catch(next);
 };
 
 module.exports.updateUserProfile = (req, res) => {
@@ -70,7 +68,7 @@ module.exports.updateUserAvatar = (req, res) => {
   userUpdate(req, res, upData);
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
@@ -87,9 +85,5 @@ module.exports.login = (req, res) => {
       });
       res.send({ message: 'Успешный вход' });
     })
-    .catch((err) => {
-      res
-        .status(401)
-        .send({ message: err.message });
-    });
+    .catch(next);
 };

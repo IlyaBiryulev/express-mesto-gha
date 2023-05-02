@@ -11,6 +11,7 @@ const { PORT = 3000 } = process.env;
 const authRouter = require('./routes/signup'); */
 /* const notFoundRouter = require('./routes/notFound'); */
 const { login, createUser } = require('./controllers/users');
+const { errors } = require('./middlewares/errors');
 
 const rootRouter = require('./routes/index');
 
@@ -29,5 +30,6 @@ app.use(rootRouter);
 /* app.use('/signin', loginRouter);
 app.use('/signup', authRouter); */
 /* app.use(notFoundRouter); */
+app.use(errors);
 
 app.listen(PORT);
