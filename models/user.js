@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const AuthError = require('../errors/AuthError');
+const LINK = require('../utils/constants');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -21,6 +22,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     /* required: true, */
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+    validate: {
+      validator: (avatar) => LINK.test(avatar),
+      message: 'Некорректная ссылка на картинку аватара',
+    },
   },
   email: {
     type: String,

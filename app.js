@@ -10,7 +10,6 @@ const { PORT = 3000 } = process.env;
 /* const loginRouter = require('./routes/signin');
 const authRouter = require('./routes/signup'); */
 /* const notFoundRouter = require('./routes/notFound'); */
-const { login, createUser } = require('./controllers/users');
 const { errors } = require('./middlewares/errors');
 
 const rootRouter = require('./routes/index');
@@ -21,9 +20,6 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
 app.use(express.json());
 app.use(cookieParser());
-
-app.post('/signin', login);
-app.post('/signup', createUser);
 
 app.use(rootRouter);
 /* app.use('/cards', auth, cardRouter); */
