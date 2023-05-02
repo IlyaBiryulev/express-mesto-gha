@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const validationErrors = require('celebrate').errors;
 
 const { PORT = 3000 } = process.env;
 
@@ -26,6 +27,7 @@ app.use(rootRouter);
 /* app.use('/signin', loginRouter);
 app.use('/signup', authRouter); */
 /* app.use(notFoundRouter); */
+app.use(validationErrors());
 app.use(errors);
 
 app.listen(PORT);
