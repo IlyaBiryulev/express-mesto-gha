@@ -31,14 +31,14 @@ const cardLikesUpdate = (req, res, upData, next) => {
     .catch(next);
 };
 
-module.exports.likeCard = (req, res) => {
+module.exports.likeCard = (req, res, next) => {
   const ownerId = req.user._id;
   const upData = { $addToSet: { likes: ownerId } };
-  cardLikesUpdate(req, res, upData);
+  cardLikesUpdate(req, res, upData, next);
 };
 
-module.exports.dislikeCard = (req, res) => {
+module.exports.dislikeCard = (req, res, next) => {
   const ownerId = req.user._id;
   const upData = { $pull: { likes: ownerId } };
-  cardLikesUpdate(req, res, upData);
+  cardLikesUpdate(req, res, upData, next);
 };
