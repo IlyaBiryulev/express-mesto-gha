@@ -3,7 +3,7 @@ const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const userRoute = require('./users');
 const cardRouter = require('./cards');
-const notFoundRouter = require('./notFound');
+const { notFound } = require('../controllers/notFound');
 
 const LINK = require('../utils/constants');
 
@@ -28,6 +28,6 @@ router.post('/signup', celebrate({
 
 router.use('/users', auth, userRoute);
 router.use('/cards', auth, cardRouter);
-router.use('*', auth, notFoundRouter);
+router.use('*', auth, notFound);
 
 module.exports = router;
