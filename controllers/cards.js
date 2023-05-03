@@ -28,7 +28,7 @@ module.exports.getAllCards = (req, res, next) => {
 
 module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
-    .orFail(() => new NotFoundError('Пользователь с указанным id не существует'))
+    .orFail(() => { throw new NotFoundError('Пользователь с указанным id не существует'); })
     .then((card) => {
       Card.deleteOne({ _id: card._id, owner: req.user._id })
         .then((result) => {
@@ -45,7 +45,7 @@ module.exports.deleteCard = (req, res, next) => {
 
 const cardLikesUpdate = (req, res, upData, next) => {
   Card.findByIdAndUpdate(req.params.cardId, upData, { new: true })
-    .orFail(() => new NotFoundError('Пользователь с указанным id не существует'))
+    .orFail(() => { throw new NotFoundError('Пользователь с указанным id не существует'); })
     .then((card) => card.populate(['owner', 'likes']))
     .then((card) => res.status(200).send(card))
     .catch(next);

@@ -42,7 +42,7 @@ module.exports.getAllUser = (req, res, next) => {
 module.exports.getUser = (req, res, next) => {
   const userId = req.params.userId ? req.params.userId : req.user._id;
   User.findById(userId)
-    .orFail(() => new NotFoundError('Пользователь с указанным id не существует'))
+    .orFail(() => { throw new NotFoundError('Пользователь с указанным id не существует'); })
     .then((user) => res.send(user))
     .catch(next);
 };
@@ -50,7 +50,7 @@ module.exports.getUser = (req, res, next) => {
 const userUpdate = (req, res, upData, next) => {
   const userId = req.user._id;
   User.findByIdAndUpdate(userId, upData, { new: true, runValidators: true })
-    .orFail(() => new NotFoundError('Пользователь с указанным id не существует'))
+    .orFail(() => { throw new NotFoundError('Пользователь с указанным id не существует'); })
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
