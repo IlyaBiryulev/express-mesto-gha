@@ -30,7 +30,17 @@ module.exports.createUser = (req, res, next) => {
       delete data.password;
       res.status(200).send(data);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.code === 11000) {
+        next(new ConflictError(
+          `Пользователь с email '${email}' уже существует.`,
+        ));
+      } else if (err.name === 'ValidationError') {
+        next(new ValidationError('Некорректные данные при создании пользователя.'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports.getAllUser = (req, res, next) => {
@@ -88,15 +98,5 @@ module.exports.login = (req, res, next) => {
       });
       res.send({ message: 'Успешный вход' });
     })
-    .catch((err) => {
-      if (err.code === 11000) {
-        next(new ConflictError(
-          `Пользователь с email '${email}' уже существует.`,
-        ));
-      } else if (err.name === 'ValidationError') {
-        next(new ValidationError('Некорректные данные при создании пользователя.'));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
