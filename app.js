@@ -5,7 +5,7 @@ const validationErrors = require('celebrate').errors;
 
 const { PORT = 3000 } = process.env;
 
-const { errorHandler } = require('./middlewares/errorHandler');
+const errorHandler = require('./middlewares/errorHandler');
 
 const router = require('./routes/index');
 
