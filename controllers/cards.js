@@ -1,6 +1,8 @@
 const Card = require('../models/card');
 
-const ForbiddenError = require('../errors/forbiddenErrors');
+const ForbiddenError = require('../errors/ForbiddenError');
+const ValidationError = require('../errors/ValidationError');
+const NotFoundError = require('../errors/NotFoundError');
 
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
@@ -8,7 +10,13 @@ module.exports.createCard = (req, res, next) => {
   Card.create({ name, link, owner: ownerId })
     .then((card) => card.populate('owner'))
     .then((card) => res.status(200).send(card))
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new ValidationError('Некорректные данные при создании карточки.'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports.getAllCards = (req, res, next) => {
@@ -20,7 +28,7 @@ module.exports.getAllCards = (req, res, next) => {
 
 module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
-    .orFail()
+    .orFail(() => new NotFoundError('Пользователь с указанным id не существует'))
     .then((card) => {
       Card.deleteOne({ _id: card._id, owner: req.user._id })
         .then((result) => {
@@ -37,7 +45,7 @@ module.exports.deleteCard = (req, res, next) => {
 
 const cardLikesUpdate = (req, res, upData, next) => {
   Card.findByIdAndUpdate(req.params.cardId, upData, { new: true })
-    .orFail()
+    .orFail(() => new NotFoundError('Пользователь с указанным id не существует'))
     .then((card) => card.populate(['owner', 'likes']))
     .then((card) => res.status(200).send(card))
     .catch(next);
